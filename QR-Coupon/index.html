@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Coupon QR Stamper</title>
+<meta name="theme-color" content="#e8f2fb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="QR Stamper">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+<button id="menuBtn" class="icon" type="button" aria-label="Themes menu" aria-haspopup="true" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+<h1>Coupon QR Stamper</h1>
+<button id="ver" class="badge" type="button" aria-label="Check for updates">v1.1</button>
+<div id="menu" hidden><div id="themes" role="menu"></div></div>
+</header>
+<div id="toast" role="status" aria-live="polite"></div>
+<main>
+<p class="lead">Place a QR code and its text into the white box of your template. Everything runs on this device.</p>
+
+<section>
+<h2>Template image</h2>
+<input id="file" type="file" accept="image/*" aria-label="Template image">
+<p id="tplname" class="note"></p>
+<canvas id="pv" aria-label="Preview"></canvas>
+<p id="pverr" class="err" role="alert"></p>
+<p id="detmsg" class="note"></p>
+</section>
+
+<section>
+<h2>White box position</h2>
+<p class="note">Pixels of the template image. Detected automatically; edit to adjust.</p>
+<div class="grid4">
+<label>X<input id="bx" type="number" inputmode="numeric" min="0"></label>
+<label>Y<input id="by" type="number" inputmode="numeric" min="0"></label>
+<label>Width<input id="bw" type="number" inputmode="numeric" min="1"></label>
+<label>Height<input id="bh" type="number" inputmode="numeric" min="1"></label>
+</div>
+<button id="detect" class="ghost" type="button">Detect white box again</button>
+</section>
+
+<section>
+<h2>Entries</h2>
+<label class="full">One entry per line (maximum 20)
+<textarea id="list" rows="7" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></label>
+<label class="check"><input id="numonly" type="checkbox"> Numbers only</label>
+<p id="count" class="note"></p>
+<ul id="issues"></ul>
+<div class="row">
+<button id="dedupe" class="ghost" type="button" disabled>Remove duplicates</button>
+<button id="go" type="button">Generate images</button>
+</div>
+<p id="status" class="note" role="status"></p>
+<div class="row">
+<button id="clrEntries" class="danger" type="button">Clear Entries</button>
+<button id="clrAll" class="danger" type="button">Clear All</button>
+</div>
+</section>
+
+<section id="results" hidden>
+<h2>Results</h2>
+<div id="out"></div>
+<div class="row">
+<button id="save" type="button">Save to Photos</button>
+<button id="zip" class="ghost" type="button">Download .zip</button>
+</div>
+</section>
+</main>
+<script src="lib/qrcode.js"></script>
+<script src="lib/jszip.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
