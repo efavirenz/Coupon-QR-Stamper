@@ -1,12 +1,12 @@
 # Coupon QR Stamper
 
-A Progressive Web App (PWA) for GitHub Pages. It turns a list of entries (up to 20) into QR codes, places each one in the white box of a template image, prints the entry under the QR code, and exports one JPEG per entry (`01.jpg`, `02.jpg`, ...). Everything runs in the browser; nothing is uploaded.
+A Progressive Web App (PWA) for GitHub Pages. It turns a list of entries (up to 20) into QR codes, places each one in the white box of a template image, optionally prints the entry under the QR code, and exports one JPEG per entry (`01.jpg`, `02.jpg`, ...). Everything runs in the browser; nothing is uploaded.
 
 ## Use
 
 1. The template defaults to `default-template.png` on every launch. Choose another image to replace it for the session.
 2. Check the white box position (X, Y, Width, Height). It is detected automatically and can be edited.
-3. Enter one entry per line. Tick **Numbers only** to require digits only.
+3. Enter one entry per line. Use **Show text under QR code** to include or omit the entry below each QR code (checked by default). Tick **Numbers only** to require digits only.
 4. Tap **Generate images**, then **Save to Photos** or **Download .zip**.
 
 ## Deploy to GitHub Pages
@@ -20,6 +20,10 @@ A Progressive Web App (PWA) for GitHub Pages. It turns a list of entries (up to 
 Tap the version badge (top right) to check for a newer version. The app compares itself with `version.json` on the server and reloads with the new files if one exists.
 
 ## Update history
+
+### Version 1.2, Date: 2026-11-14
+
+Changes: Prevented page pinch-zoom on mobile, added the **Show text under QR code** option (enabled by default) for preview and generated images, and made the theme menu close after selecting a theme.
 
 ### Version 1.1, Date: 2026-11-13
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Coupon QR Stamper</title>
 <meta name="theme-color" content="#e8f2fb">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,12 +15,12 @@
 <header class="top">
 <button id="menuBtn" class="icon" type="button" aria-label="Themes menu" aria-haspopup="true" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
 <h1>Coupon QR Stamper</h1>
-<button id="ver" class="badge" type="button" aria-label="Check for updates">v1.1</button>
+<button id="ver" class="badge" type="button" aria-label="Check for updates">v1.2</button>
 <div id="menu" hidden><div id="themes" role="menu"></div></div>
 </header>
 <div id="toast" role="status" aria-live="polite"></div>
 <main>
-<p class="lead">Place a QR code and its text into the white box of your template. Everything runs on this device.</p>
+<p class="lead">Place a QR code and, optionally, its text into the white box of your template. Everything runs on this device.</p>
 
 <section>
 <h2>Template image</h2>
@@ -29,6 +29,7 @@
 <canvas id="pv" aria-label="Preview"></canvas>
 <p id="pverr" class="err" role="alert"></p>
 <p id="detmsg" class="note"></p>
+<label class="check"><input id="showQrText" type="checkbox" checked> Show text under QR code</label>
 </section>
 
 <section>

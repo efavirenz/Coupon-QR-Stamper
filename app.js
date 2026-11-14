@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id);
-const VERSION='1.1';
+const VERSION='1.2';
 const MAX=20,MAXLEN=100,EC='M';
 // Reference layout measured from Blank.png / Example.png (1029x1491)
 const REF={W:1029,H:1491,x:279,y:963,w:473,h:495,qr:378,qTop:33,fs:45.6,tBottom:31};
@@ -42,7 +42,7 @@ function runDetect(){
   preview();
 }
 
-function render(text){
+function render(text,showText=$('showQrText').checked){
   const c=document.createElement('canvas');c.width=tpl.width;c.height=tpl.height;
   const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(tpl,0,0);
   const b=box(),qs=b.w*REF.qr/REF.w;
@@ -52,10 +52,12 @@ function render(text){
   const sz=cell*n,qx=Math.round(b.x+(b.w-sz)/2),qy=Math.round(b.y+b.h*REF.qTop/REF.h);
   g.fillStyle='#000';
   for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(q.isDark(r,k))g.fillRect(qx+k*cell,qy+r*cell,cell,cell);
-  let fs=qs*REF.fs/REF.qr;
-  g.textAlign='center';g.textBaseline='alphabetic';
-  do{g.font=fs+'px Helvetica,Arial,sans-serif';fs--}while(g.measureText(text).width>b.w*.9&&fs>8);
-  g.fillText(text,b.x+b.w/2,b.y+b.h-b.h*REF.tBottom/REF.h);
+  if(showText){
+    let fs=qs*REF.fs/REF.qr;
+    g.textAlign='center';g.textBaseline='alphabetic';
+    do{g.font=fs+'px Helvetica,Arial,sans-serif';fs--}while(g.measureText(text).width>b.w*.9&&fs>8);
+    g.fillText(text,b.x+b.w/2,b.y+b.h-b.h*REF.tBottom/REF.h);
+  }
   return c;
 }
 function preview(){
@@ -91,11 +93,13 @@ $('go').onclick=async()=>{
   if(r.bad.length){alert('"Numbers only" is on, but these lines contain other characters: '+r.bad.map(o=>o.n).join(', ')+'.\nNo images were generated.');return}
   if(r.errs.length||!r.L.length)return;
   urls.forEach(URL.revokeObjectURL);urls=[];files=[];$('out').innerHTML='';
+  const showText=$('showQrText').checked;
   $('go').disabled=true;
+  $('showQrText').disabled=true;
   try{
     for(let i=0;i<r.L.length;i++){
       $('status').textContent=`Creating image ${i+1} of ${r.L.length}…`;
-      const blob=await new Promise(res=>render(r.L[i].v).toBlob(res,'image/jpeg',.95));
+      const blob=await new Promise(res=>render(r.L[i].v,showText).toBlob(res,'image/jpeg',.95));
       const f=new File([blob],String(i+1).padStart(2,'0')+'.jpg',{type:'image/jpeg'});files.push(f);
       const u=URL.createObjectURL(blob);urls.push(u);
       const fig=document.createElement('figure'),im=new Image();im.src=u;im.alt=f.name;
@@ -104,7 +108,7 @@ $('go').onclick=async()=>{
     }
     $('status').textContent=`Done. ${files.length} image${files.length>1?'s':''} created.`;$('results').hidden=false;
   }catch(e){$('status').textContent='';alert('Generation stopped: '+e.message)}
-  update();
+  finally{$('showQrText').disabled=false;update()}
 };
 $('dedupe').onclick=()=>{const s=new Set();$('list').value=check().L.filter(o=>!s.has(o.v)&&s.add(o.v)).map(o=>o.v).join('\n');update()};
 $('save').onclick=async()=>{
@@ -120,7 +124,7 @@ $('zip').onclick=async()=>{
 $('file').onchange=e=>{const f=e.target.files[0];if(f){$('tplname').textContent='Template: '+f.name;loadTpl(f)}};
 $('detect').onclick=runDetect;
 ['bx','by','bw','bh'].forEach(id=>$(id).addEventListener('input',preview));
-$('list').addEventListener('input',update);$('numonly').addEventListener('change',update);
+$('list').addEventListener('input',update);$('numonly').addEventListener('change',update);$('showQrText').addEventListener('change',preview);
 
 // Clear buttons
 const clearEntries=()=>{$('list').value='';$('status').textContent='';update()};
@@ -159,11 +163,15 @@ function applyTheme(id){
   Object.keys(THEMES).filter(k=>THEMES[k][1]===m).forEach(k=>{
     const b=document.createElement('button'),t=THEMES[k];b.type='button';b.dataset.id=k;b.setAttribute('role','menuitemradio');
     b.innerHTML='<span class="sw" style="background:linear-gradient(135deg,'+t[2]+' 50%,'+t[7]+' 50%)"></span>';b.append(t[0]);
-    b.onclick=()=>applyTheme(k);$('themes').append(b);
+    b.onclick=()=>{applyTheme(k);setMenu(false)};$('themes').append(b);
   });
 });
 const setMenu=o=>{$('menu').hidden=!o;$('menuBtn').setAttribute('aria-expanded',o)};
 $('menuBtn').onclick=()=>setMenu($('menu').hidden);
+// Prevent pinch-to-zoom gestures on iOS Safari.
+const preventGestureZoom=e=>e.preventDefault();
+document.addEventListener('gesturestart',preventGestureZoom,{passive:false});
+document.addEventListener('gesturechange',preventGestureZoom,{passive:false});
 document.addEventListener('pointerdown',e=>{if(!$('menu').hidden&&!$('menu').contains(e.target)&&!$('menuBtn').contains(e.target))setMenu(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
 let saved=null;try{saved=localStorage.getItem('theme')}catch(e){}
