@@ -15,7 +15,7 @@
 <header class="top">
 <button id="menuBtn" class="icon" type="button" aria-label="Themes menu" aria-haspopup="true" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
 <h1>Coupon QR Stamper</h1>
-<button id="ver" class="badge" type="button" aria-label="Check for updates">v1.2</button>
+<button id="ver" class="badge" type="button" aria-label="Check for updates">v1.3</button>
 <div id="menu" hidden><div id="themes" role="menu"></div></div>
 </header>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -50,7 +50,7 @@
 <textarea id="list" rows="7" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></label>
 <label class="check"><input id="numonly" type="checkbox"> Numbers only</label>
 <p id="count" class="note"></p>
-<ul id="issues"></ul>
+<ul id="issues" aria-live="polite"></ul>
 <div class="row">
 <button id="dedupe" class="ghost" type="button" disabled>Remove duplicates</button>
 <button id="go" type="button">Generate images</button>
